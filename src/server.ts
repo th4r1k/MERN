@@ -1,4 +1,3 @@
-// import "dotenv/config";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import path from "path";
@@ -6,6 +5,9 @@ import { fileURLToPath } from "url";
 import { logger, logEvents } from "./middleware/logger";
 import { connectDB } from "./config/dbConn";
 import mongoose from "mongoose";
+import router from "./routes/root";
+import userRoutes from "./routes/userRoutes";
+import aviaryRoutes from "./routes/aviaryRoutes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +22,9 @@ app.use(logger);
 app.use(express.json());
 
 app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/", router);
+app.use("/users", userRoutes);
+app.use("/aviary", aviaryRoutes);
 
 app.all("*", (req: Request, res: Response) => {
   res.status(404);

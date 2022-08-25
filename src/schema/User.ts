@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mng from "mongoose";
 import { UserType } from "../types/userTypes";
 import { emailRegex } from "../utils/emailRegex";
 
@@ -6,7 +6,7 @@ export interface IUserSchema extends UserType {
   _id: string;
 }
 
-const userSchema = new Schema<UserType>({
+const userSchema = new mng.Schema<UserType>({
   username: {
     type: String,
     required: [true, "Username is required"],
@@ -26,12 +26,10 @@ const userSchema = new Schema<UserType>({
     min: [6, "Password must be at least 6 characters"],
     max: [50, "Password must be less then 50 characters"],
   },
-  roles: [
-    {
-      type: String,
-      default: "Granjeiro",
-    },
-  ],
+  roles: {
+    type: [String],
+    default: ["Granjeiro"],
+  },
   active: {
     type: Boolean,
     default: true,

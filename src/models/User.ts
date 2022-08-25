@@ -1,6 +1,6 @@
-import { model } from "mongoose";
+import mng from "mongoose";
 import userSchema, { IUserSchema } from "../schema/User";
 
-const UserModel = model<IUserSchema>("User", userSchema);
+const UserModel = mng.model<IUserSchema>("User", userSchema);
 
 export default UserModel;
