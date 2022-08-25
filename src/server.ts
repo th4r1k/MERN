@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import router from "./routes/root";
 import userRoutes from "./routes/userRoutes";
 import aviaryRoutes from "./routes/aviaryRoutes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,6 +37,8 @@ app.all("*", (req: Request, res: Response) => {
     res.type("text").send("404 Not Found");
   }
 });
+
+app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
