@@ -9,6 +9,7 @@ import router from "./routes/root";
 import userRoutes from "./routes/userRoutes";
 import aviaryRoutes from "./routes/aviaryRoutes";
 import { errorHandler } from "./middleware/errorHandler";
+import authRoutes from "./routes/authRoutes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +27,7 @@ app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/", router);
 app.use("/users", userRoutes);
 app.use("/aviary", aviaryRoutes);
+app.use("/auth", authRoutes);
 
 app.all("*", (req: Request, res: Response) => {
   res.status(404);
