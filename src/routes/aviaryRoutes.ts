@@ -1,18 +1,13 @@
 import express from "express";
-import {
-  createNewAviary,
-  deleteAviary,
-  getAllAviaries,
-  updateAviary,
-} from "../controllers/aviaryController";
+import * as aviaryController from "../controllers/aviaryController";
 
 const aviaryRoutes = express.Router();
 
 aviaryRoutes
   .route("/")
-  .get(getAllAviaries)
-  .post(createNewAviary)
-  .patch(updateAviary)
-  .delete(deleteAviary);
+  .get(aviaryController.getAllAviaries)
+  .post(aviaryController.createNewAviary)
+  .patch(aviaryController.updateAviary)
+  .delete(aviaryController.deleteAviary);
 
 export default aviaryRoutes;
