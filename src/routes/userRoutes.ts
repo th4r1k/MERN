@@ -1,7 +1,10 @@
 import express from "express";
 import * as userController from "../controllers/usersController";
+import { verifyJWT } from "../middleware/verifyJWT";
 
 const userRoutes = express.Router();
+
+userRoutes.use(verifyJWT);
 
 userRoutes
   .route("/")

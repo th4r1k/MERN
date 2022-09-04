@@ -1,7 +1,10 @@
 import express from "express";
 import * as aviaryController from "../controllers/aviaryController";
+import { verifyJWT } from "../middleware/verifyJWT";
 
 const aviaryRoutes = express.Router();
+
+aviaryRoutes.use(verifyJWT);
 
 aviaryRoutes
   .route("/")
