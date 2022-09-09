@@ -1,8 +1,12 @@
-import UserModel from "../models/User";
-import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
 import { Request, Response } from "express";
-import jwt, { VerifyErrors } from "jsonwebtoken";
+import { decryptPwd, findUserByName } from "../services/usersServices";
+import {
+  signAcessToken,
+  signRefreshToken,
+  tokenInfo,
+  verifyToken,
+} from "../services/authServices";
 
 export const login = asyncHandler(async (req: Request, res: any) => {
   const { username, password } = req.body;
@@ -11,39 +15,20 @@ export const login = asyncHandler(async (req: Request, res: any) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const foundUser = await UserModel.findOne({ username }).exec();
+  const foundUser = await findUserByName(username);
 
   if (!foundUser || !foundUser.active) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const match = await bcrypt.compare(password, foundUser.password);
+  const match = await decryptPwd(password, foundUser.password);
   if (!match) return res.status(401).json({ message: "Unauthorized" });
 
-  const acessToken = jwt.sign(
-    {
-      userInfo: {
-        username: foundUser.username,
-        roles: foundUser.roles,
-      },
-    },
-    process.env.ACCESS_TOKEN_SECRET!,
-    { expiresIn: "15m" }
-  );
+  const acessToken = signAcessToken(foundUser);
 
-  const refreshToken = jwt.sign(
-    { username: foundUser.username },
-    process.env.ACCESS_TOKEN_SECRET!,
-    { expiresIn: "7d" }
-  );
+  const refreshToken = signRefreshToken(foundUser);
 
-  res.cookie("jwt", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
-
+  res.cookie("jwt", refreshToken, tokenInfo);
   res.json({ acessToken });
 });
 
@@ -54,30 +39,18 @@ export const refresh = (req: Request, res: Response) => {
 
   const refreshToken = cookies.jwt as string;
 
-  jwt.verify(
-    // verifyJWT(
+  verifyToken(
     refreshToken,
-    process.env.ACCESS_TOKEN_SECRET!,
+    process.env.ACCESS_TOKEN_SECRET,
 
-    async (err: VerifyErrors | null, decoded: any | undefined) => {
+    async (err, decoded) => {
       if (err) return res.status(403).json({ message: "Forbidden" });
-
-      const foundUser = await UserModel.findOne({
-        username: decoded.username,
-      }).exec();
+      console.log(decoded);
+      const foundUser = await findUserByName(decoded?.username);
 
       if (!foundUser) return res.status(401).json({ message: "Unauthorized" });
 
-      const accessToken = jwt.sign(
-        {
-          UserInfo: {
-            username: foundUser.username,
-            roles: foundUser.roles,
-          },
-        },
-        process.env.ACCESS_TOKEN_SECRET!,
-        { expiresIn: "15m" }
-      );
+      const accessToken = signAcessToken(foundUser);
 
       res.json({ accessToken });
     }

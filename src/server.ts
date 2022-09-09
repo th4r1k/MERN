@@ -54,5 +54,5 @@ mongoose.connection.once("open", () => {
 
 mongoose.connection.on("error", (err) => {
   console.log(err);
-  logEvents(`${err.no}: ${err.code}\t${err.hostname}`, "mongoErrLog.log");
+  logEvents(`${err}: ${err.code}\t${err.codeName}`, "mongoErrLog.log");
 });

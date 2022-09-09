@@ -10,3 +10,12 @@ export default class HttpException extends Error {
     this.error = error ?? null;
   }
 }
+
+export function ErrorHandler(error: unknown): HttpException {
+  if (error instanceof HttpException) {
+    throw new HttpException(`Failed: ${error.message}`, 400);
+  } else {
+    console.log(error);
+    throw new HttpException("Unknown error occurred", 500);
+  }
+}

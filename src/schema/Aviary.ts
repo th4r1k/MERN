@@ -1,6 +1,5 @@
 import mng from "mongoose";
 import { AviaryType } from "../types/aviaryTypes";
-// import {AviaryType} from
 
 export interface IAviarySchema extends AviaryType {
   _id: string;
@@ -8,7 +7,7 @@ export interface IAviarySchema extends AviaryType {
 
 const aviarySchema = new mng.Schema<AviaryType>({
   user: {
-    type: mng.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
     required: true,
   },
