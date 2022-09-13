@@ -11,6 +11,7 @@ import aviaryRoutes from "./routes/aviaryRoutes";
 import { errorHandler } from "./middleware/errorHandler";
 import authRoutes from "./routes/authRoutes";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +24,8 @@ const app = express();
 app.use(logger);
 
 app.use(express.json());
+
+app.use(cors());
 
 app.use(cookieParser());
 
