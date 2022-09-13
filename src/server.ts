@@ -31,6 +31,7 @@ app.use("/", router);
 app.use("/users", userRoutes);
 app.use("/aviary", aviaryRoutes);
 app.use("/auth", authRoutes);
+app.use("/batch", authRoutes);
 
 app.all("*", (req: Request, res: Response) => {
   res.status(404);

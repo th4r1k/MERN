@@ -1,3 +1,4 @@
+import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 
 export function signAcessToken(foundUser: any) {
@@ -35,7 +36,7 @@ export function verifyToken(
   jwt.verify(refreshToken, tokenSecret, options, callback);
 }
 
-export const tokenInfo = {
+export const tokenInfo: CookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: "none",
