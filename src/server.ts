@@ -12,6 +12,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import authRoutes from "./routes/authRoutes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { corsOptions } from "./config/corsOptions";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,9 +24,9 @@ const app = express();
 
 app.use(logger);
 
-app.use(express.json());
+app.use(cors(corsOptions));
 
-app.use(cors());
+app.use(express.json());
 
 app.use(cookieParser());
 
