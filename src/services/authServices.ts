@@ -1,21 +1,28 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 
-export function signAcessToken(foundUser: any) {
+interface User {
+  _id?: string;
+  username: string;
+  roles?: string[];
+}
+
+export function signAcessToken(foundUser: User) {
+  console.log(foundUser);
   const acessToken = jwt.sign(
     {
-      userInfo: {
-        username: foundUser.username,
-        roles: foundUser.roles,
-      },
+      // userInfo: {
+      username: foundUser.username,
+      roles: foundUser.roles,
+      // },
     },
     process.env.ACCESS_TOKEN_SECRET!,
-    { expiresIn: "15m" }
+    { expiresIn: "1m" }
   );
   return acessToken;
 }
 
-export function signRefreshToken(foundUser: any) {
+export function signRefreshToken(foundUser: User) {
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.ACCESS_TOKEN_SECRET!,
@@ -29,14 +36,14 @@ export function signRefreshToken(foundUser: any) {
 export function verifyToken(
   refreshToken: string,
   tokenSecret: string | undefined,
-  callback: jwt.VerifyCallback<jwt.JwtPayload>,
+  callback?: jwt.VerifyCallback<jwt.JwtPayload>,
   options?: any
 ) {
   tokenSecret = process.env.ACCESS_TOKEN_SECRET!;
   jwt.verify(refreshToken, tokenSecret, options, callback);
 }
 
-export const tokenInfo: CookieOptions = {
+export const tokenInfo = {
   httpOnly: true,
   secure: true,
   sameSite: "none",

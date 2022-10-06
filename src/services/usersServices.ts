@@ -102,3 +102,21 @@ export async function updater(user: any) {
     throw ErrorHandler(err);
   }
 }
+
+export async function findMe(username: string): Promise<any | null> {
+  try {
+    const user = await UserModel.findOne({ username })
+      .select("-password")
+      .select("-email")
+      .select("-username")
+      .select("-active")
+      .select("-__v")
+
+      .collation({ locale: "en", strength: 2 })
+      .lean()
+      .exec();
+    return user;
+  } catch (err) {
+    throw ErrorHandler(err);
+  }
+}

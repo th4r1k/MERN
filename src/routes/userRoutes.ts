@@ -13,4 +13,6 @@ userRoutes
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+userRoutes.route("/me").get(userController.getUser);
+
 export default userRoutes;

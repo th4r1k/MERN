@@ -16,23 +16,24 @@ export const login = asyncHandler(async (req: Request, res: any) => {
 
   const foundUser = await findUserByName(username);
   if (!foundUser || !foundUser.active) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "1" });
   }
 
   const match = await decryptPwd(password, foundUser.password);
-  if (!match) return res.status(401).json({ message: "Unauthorized" });
+  if (!match) return res.status(401).json({ message: "2" });
 
   const acessToken = signAcessToken(foundUser);
   const refreshToken = signRefreshToken(foundUser);
 
   res.cookie("jwt", refreshToken, tokenInfo);
   res.json({ acessToken });
+  // return acessToken;
 });
 
 export const refresh = (req: Request, res: Response) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
-
+  if (!cookies.jwt)
+    return res.status(401).json({ message: "nao deu boa aqui" });
   const refreshToken = cookies.jwt as string;
 
   verifyToken(
@@ -43,7 +44,8 @@ export const refresh = (req: Request, res: Response) => {
       if (err) return res.status(403).json({ message: "Forbidden" });
 
       const foundUser = await findUserByName(decoded?.username);
-      if (!foundUser) return res.status(401).json({ message: "Unauthorized" });
+      if (!foundUser)
+        return res.status(401).json({ message: "decodificacao do user" });
 
       const accessToken = signAcessToken(foundUser);
 

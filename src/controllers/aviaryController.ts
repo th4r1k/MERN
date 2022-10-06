@@ -20,7 +20,8 @@ export const getAllAviaries = asyncHandler(
 
     const aviariesWithUser = await Promise.all(
       aviaries.map(async (aviary) => {
-        const user = await findUser(aviary._id);
+        // const user = await findUser(aviary._id);
+        const user = await findUser(aviary.user);
         return { ...aviary, username: user?.username };
       })
     );

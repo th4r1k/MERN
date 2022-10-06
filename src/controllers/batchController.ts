@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 
 import {
   createBatch,
+  dailyFood,
+  dailyMortality,
+  dailyWeight,
   deleteBatch,
   findBatch,
   getBatches,
@@ -11,27 +14,32 @@ import {
 } from "../services/batchServices";
 import { BatchTypes } from "../types/batchTypes";
 
-export const getAllBathes = asyncHandler(
+export const getAllBatches = asyncHandler(
   async (req: Request, res: Response): Promise<any> => {
     const batches = await getBatches();
 
     if (!batches?.length) {
       return res.status(400).json({ message: "No batch found" });
     }
+    res.json(batches);
   }
 );
 export const createNewBatch = asyncHandler(async (req: Request, res: any) => {
-  const { batch, arrived }: BatchTypes = req.body;
+  const { aviary, batch, arrived, id }: BatchTypes = req.body;
 
   if (!batch) {
-    return res.status(400).json({ message: "Batch is required" });
+    return res.status(400).json({ message: "batch is required" });
+  }
+
+  if (!aviary) {
+    return res.status(400).json({ message: "Aviary is required" });
   }
   const duplicate = await verifyDuplicate(batch);
 
   if (duplicate) {
     return res.status(409).json({ message: "Batch already exists" });
   }
-  const batchObject = { batch, arrived };
+  const batchObject = { batch, aviary, arrived };
   const newBatch = await createBatch(batchObject);
 
   if (newBatch) {
@@ -71,7 +79,7 @@ export const updateBatch = asyncHandler(async (req: Request, res: any) => {
   res.json({ message: `${verifyBatch.batch} updated` });
 });
 
-export const deleteUser = asyncHandler(async (req: Request, res: any) => {
+export const removeBatch = asyncHandler(async (req: Request, res: any) => {
   const { id } = req.body;
   if (!id) {
     return res.status(400).json({ message: "Batch ID required" });
@@ -83,4 +91,37 @@ export const deleteUser = asyncHandler(async (req: Request, res: any) => {
 
   await deleteBatch(batch);
   res.json(`Username ${batch.batch} with ID ${batch._id} deleted`);
+});
+
+export const daily = asyncHandler(async (req: Request, res: any) => {
+  const { id } = req.body;
+  const verifyBatch = await findBatch(id);
+  if (!verifyBatch) {
+    return res.status(400).json({ message: "Batch not found" });
+  }
+
+  await dailyMortality(req.body);
+  res.json({ message: `${verifyBatch.batch} updated` });
+});
+
+export const food = asyncHandler(async (req: Request, res: any) => {
+  const { id } = req.body;
+  const verifyBatch = await findBatch(id);
+  if (!verifyBatch) {
+    return res.status(400).json({ message: "Batch not found" });
+  }
+
+  await dailyFood(req.body);
+  res.json({ message: `${verifyBatch.batch} updated` });
+});
+
+export const weight = asyncHandler(async (req: Request, res: any) => {
+  const { id } = req.body;
+  const verifyBatch = await findBatch(id);
+  if (!verifyBatch) {
+    return res.status(400).json({ message: "Batch not found" });
+  }
+
+  await dailyWeight(req.body);
+  res.json({ message: `${verifyBatch.batch} updated` });
 });

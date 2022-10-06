@@ -6,6 +6,7 @@ import {
   createUser,
   deleteUsr,
   encryptPwd,
+  findMe,
   findUser,
   getUsers,
   updater,
@@ -101,5 +102,16 @@ export const deleteUser = asyncHandler(
 
     await deleteUsr(user);
     res.json(`Username ${user.username} with ID ${user._id} deleted`);
+  }
+);
+
+export const getUser = asyncHandler(
+  async (req: any, res: Response): Promise<any> => {
+    const me: any = req.user;
+
+    const users = await findMe(me);
+    // console.log(users);
+
+    res.json(users);
   }
 );

@@ -3,12 +3,13 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { logger, logEvents } from "./middleware/logger";
+import { errorHandler } from "./middleware/errorHandler";
 import { connectDB } from "./config/dbConn";
 import mongoose from "mongoose";
 import router from "./routes/root";
 import userRoutes from "./routes/userRoutes";
 import aviaryRoutes from "./routes/aviaryRoutes";
-import { errorHandler } from "./middleware/errorHandler";
+import batchRoutes from "./routes/batchRoutes";
 import authRoutes from "./routes/authRoutes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -35,7 +36,7 @@ app.use("/", router);
 app.use("/users", userRoutes);
 app.use("/aviary", aviaryRoutes);
 app.use("/auth", authRoutes);
-app.use("/batch", authRoutes);
+app.use("/batch", batchRoutes);
 
 app.all("*", (req: Request, res: Response) => {
   res.status(404);
