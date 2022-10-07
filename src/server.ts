@@ -26,7 +26,7 @@ const app = express();
 app.use(logger);
 
 // app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", req.header("origin"));
