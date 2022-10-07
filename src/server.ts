@@ -26,7 +26,7 @@ const app = express();
 app.use(logger);
 
 // app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
